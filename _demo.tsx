@@ -29,7 +29,7 @@ export default function App() {
       <View>
         <TestRobot {...svgProps} />
           <Pressable
-              onPress={(event) => SendCommand('play', event)}
+              onPress={(event) => SendCommand()}
               style={({pressed}) => ({
                   opacity: pressed ? 0.5 : 1,
               })}>

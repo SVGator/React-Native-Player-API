@@ -79,7 +79,17 @@ export default function App() {
 
 ## Changelog
 
+#### 2.1.0
+
+* Player API Support Extended with:
+    * adjusting speed
+    * adjusting direction
+    * adjusting alternate
+    * adjusting fill mode
+    * adjusting the number of iterations
+
 #### 2.0.0
+
 * Player API Support Implemented
     * Starting the animation programatically
     * Capturing animation events 
@@ -101,7 +111,6 @@ export default function App() {
 ## Useful Links
 
 For more information, check out the links below:
-* [SVGator API - React Native Test App](https://github.com/SVGator/React-Native-Player-API)
 * [SVGator Player JS API Documentation](https://www.svgator.com/help/getting-started/svgator-player-js-api)
 * [Animate Programatically with SVGator](https://www.svgator.com/help/getting-started/animate-programmatically)
 * [Export React Native Animations with SVGator](https://www.svgator.com/help/getting-started/export-react-native-animations)

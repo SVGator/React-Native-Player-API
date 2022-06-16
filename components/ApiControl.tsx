@@ -1,8 +1,11 @@
 import React from 'react';
-import {ColorSchemeName, Pressable, StyleSheet, Image, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
+import {ColorSchemeName, Pressable, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import {Text, View} from '../components/Themed';
+import SliderControl from './SliderControl';
+import PickerControl from './PickerControl';
+import {round} from './Utils';
 import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import SVGatorLogo from './svg/SVGator-Logo';
 import TestRobot from './svg/Test-Robot';
@@ -27,20 +30,34 @@ export default function ApiControl(props: any) {
         seekByBack: {command: 'seekBy', param: -500},
         seekHalf: {command: 'seek', param: 50},
         seek: {command: 'seek', param: 50},
+        set: {},
     };
 
-    const SendCommand = (command: any, event: object) => {
+    const setDirection = (value: number) => {
+        const direction = Math.sign(value);
+        const alternate = !!Math.abs(value % 10);
+        SendCommand('set', ['direction', direction]);
+        SendCommand('set', ['alternate', alternate]);
+    };
+
+    const SendCommand = (command: any, parameters?: Array<any>) => {
         if (!commands[command]) {
             return;
         }
         const apiCommand = commands[command]['command'] || command;
-        const apiCommandParam = commands[command]['param'] || '';
+        const apiCommandParam = commands[command]['param'] || parameters || '';
+        const paramsStr = Array.isArray(apiCommandParam)
+            ? apiCommandParam
+                .map(item => typeof item === 'string' ? `'${item}'` : item)
+                .join(', ')
+            : apiCommandParam;
+
         const jsCommand = `document
         && document.querySelector
         && document.querySelector('svg')
         && document.querySelector('svg').svgatorPlayer
         && document.querySelector('svg').svgatorPlayer['${apiCommand}']
-        && document.querySelector('svg').svgatorPlayer['${apiCommand}'](${apiCommandParam});
+        && document.querySelector('svg').svgatorPlayer['${apiCommand}'](${paramsStr});
         true;
         `;
         SVGatorWebView.current.injectJavaScript(jsCommand);
@@ -77,7 +94,7 @@ export default function ApiControl(props: any) {
                 <View style={styles.buttonsContainer}>
                     <View style={styles.buttons}>
                         <Pressable
-                            onPress={(event) => SendCommand('play', event)}
+                            onPress={(event) => SendCommand('play')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -93,7 +110,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('pause', event)}
+                            onPress={(event) => SendCommand('pause')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -109,7 +126,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('stop', event)}
+                            onPress={(event) => SendCommand('stop')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -125,7 +142,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('reverse', event)}
+                            onPress={(event) => SendCommand('reverse')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -142,7 +159,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('toggle', event)}
+                            onPress={(event) => SendCommand('toggle')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -161,7 +178,7 @@ export default function ApiControl(props: any) {
 
                     <View style={styles.buttons}>
                         <Pressable
-                            onPress={(event) => SendCommand('seekByBack', event)}
+                            onPress={(event) => SendCommand('seekByBack')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -177,7 +194,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('seekHalf', event)}
+                            onPress={(event) => SendCommand('seekHalf')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -193,7 +210,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('seekByFwd', event)}
+                            onPress={(event) => SendCommand('seekByFwd')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -209,7 +226,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('restart', event)}
+                            onPress={(event) => SendCommand('restart')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -226,7 +243,7 @@ export default function ApiControl(props: any) {
                         </Pressable>
 
                         <Pressable
-                            onPress={(event) => SendCommand('destruct', event)}
+                            onPress={(event) => SendCommand('destruct')}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
                             })}
@@ -241,10 +258,62 @@ export default function ApiControl(props: any) {
                             </View>
                         </Pressable>
                     </View>
+
+                    <View style={styles.buttons}>
+                        <SliderControl
+                            name={'Speed'}
+                            default={1}
+                            minimumValue={0.01}
+                            maximumValue={10}
+                            step={0.01}
+                            formatter={(v: any) => round(v * 100) + '%'}
+                            onValueChange={(value: any) => SendCommand('set', ['speed', value])}
+                        />
+
+                        <SliderControl
+                            name={'Iterations'}
+                            default={1}
+                            minimumValue={0}
+                            maximumValue={25}
+                            formatter={(v: any) => v === 0 ? '∞' : v}
+                            onValueChange={(value: any) => SendCommand('set', ['iterations', value])}
+                        />
+
+                        <SliderControl
+                            name={'FPS'}
+                            default={100}
+                            minimumValue={1}
+                            maximumValue={120}
+                            onValueChange={(value: any) => SendCommand('set', ['fps', value])}
+                        />
+                    </View>
+
+                    <View style={styles.buttons}>
+                        <PickerControl
+                            name={'Direction'}
+                            items={[
+                                {label: "Normal", value: 10},
+                                {label: "Reverse", value: -10},
+                                {label: "Alternate", value: 11},
+                                {label: "Alt. Reverse", value: -11},
+                            ]}
+                            onValueChange={(value: any) => setDirection(value)}
+
+                        />
+                        <PickerControl
+                            name={'Fill mode'}
+                            items={[
+                                {label: "Forwards", value: 1},
+                                {label: "Backwards", value: -1},
+                            ]}
+                            onValueChange={(value: any) => SendCommand('set', ['fill', value])}
+                        />
+                    </View>
                 </View>
+
                 <TouchableOpacity onPress={handleHelpPress} style={{marginTop: 10}}>
                     <Text lightColor={Colors.light.tint}>
-                        Tap here to see SVGator's Full Player API documentation.
+                        Full Player API documentation
                     </Text>
                 </TouchableOpacity>
             </View>

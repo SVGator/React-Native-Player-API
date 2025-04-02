@@ -18,7 +18,7 @@ const SVGatorComponent = React.forwardRef((props, ref) => {
     const compiledDetails = JSON.stringify({width: styles.container.width, height: styles.style.height });
 
     return (
-        <View style={{backgroundColor: 'lightGray', borderColor: '#333', borderWidth:1, borderRadius: 10, marginVertical: 10}}>
+        <View style={{backgroundColor: '#333', borderColor: '#333', borderWidth:1, borderRadius: 10, marginVertical: 10, padding: 10}}>
             <Text style={{fontWeight: 'bold', fontSize: 20}}>{props.title}</Text>
             <Text>Passed: {passedDetails}</Text>
             <Text>Compiled: {compiledDetails}</Text>

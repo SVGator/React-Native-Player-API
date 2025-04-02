@@ -14,7 +14,7 @@ export default function Fixes() {
                 <ExternalSmall title={'Small (20x10) - auto (no sizes passed)'} />
                 <TestRobotExternal title={'Robot 200x130 - auto (no sizes passed)'} />
                 <TestRobotExternal width={200} height={60} title={'Robot 200x130 - 200x60 passed'} />
-                <RocketTestExternal width={100} title={'Rocket 800x600, width:100'} />
+                <RocketTestExternal width={'100%'} title={'Rocket 800x600, width:100%'} />
                 <TestRobotExternal width={'50%'} title={'Robot 200x130, width:50%'} />
                 <RocketTestExternal width={100} title={'Rocket 800x600, width:100'} />
                 <RocketTestExternal title={'Rocket 800x600 - auto (no sizes passed)'} />

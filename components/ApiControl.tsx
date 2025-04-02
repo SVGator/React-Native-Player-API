@@ -1,8 +1,8 @@
 import React from 'react';
-import {ColorSchemeName, Pressable, StyleSheet, Image, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
+import {Pressable, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import {Text, View} from '../components/Themed';
+import {Text, View} from './Themed';
 import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import SVGatorLogo from './svg/SVGator-Logo';
 import TestRobot from './svg/Test-Robot';
@@ -63,8 +63,8 @@ export default function ApiControl(props: any) {
         onMessage: ReceiveMessage,
     };
     const svg = props && props.type === 'external'
-    ? <RocketTestExternal {...svgProps} />
-    : <TestRobot {...svgProps} />;
+        ? <RocketTestExternal {...svgProps} />
+        : <TestRobot {...svgProps} />;
 
     return (
         <ScrollView>

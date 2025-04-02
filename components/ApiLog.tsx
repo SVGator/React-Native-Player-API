@@ -33,14 +33,13 @@ class ApiLog extends AbstractComponent {
                 <View
                     style={styles.log}
                     darkColor="rgba(255,255,255,0.05)"
-                    lightColor="#2d2d2d">
-                    <MonoText lightColor="rgba(255,255,255,0.8)" darkColor="rgba(0,0,0,0.8)">
+                    lightColor="#2d2d2d"
+                >
+                    <MonoText lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
                         &gt;&nbsp;
-                        <Text lightColor="rgba(255,255,255,1)"
-                              darkColor="rgba(0,0,0,1)">{this.state.event}</Text>
+                        <Text lightColor="rgba(0,0,0,1)" darkColor="rgba(255,255,255,1)">{this.state.event}</Text>
                         {this.state.msg}
-                        <Text lightColor="rgba(255,255,255,1)"
-                              darkColor="rgba(0,0,0,1)">{this.state.offset}</Text>
+                        <Text lightColor="rgba(0,0,0,1)" darkColor="rgba(255,255,255,1)">{this.state.offset}</Text>
                         .
                     </MonoText>
                 </View>

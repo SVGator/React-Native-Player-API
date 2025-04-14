@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "Mobile-API",
-    "slug": "Mobile-API",
-    "version": "1.0.0",
+    "name": "SVGator's Player API React Native Demo",
+    "slug": "svgators-player-api-react-native-demo",
+    "scheme": "svgatorsplayerapireactnativedemo",
+    "version": "2.0.1",
     "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -20,17 +21,22 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "bundleIdentifier": "com.svgator.playerapireactnativedemo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "package": "com.svgator.playerapireactnativedemo"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

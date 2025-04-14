@@ -1,18 +1,20 @@
 import React from 'react';
-import {Pressable, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {Pressable, StyleSheet, TouchableOpacity, ScrollView, GestureResponderEvent} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
+
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import {Text, View} from './Themed';
-import {FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons';
 import SVGatorLogo from './svg/SVGator-Logo';
-import TestRobot from './svg/Test-Robot';
-import RocketTestExternal from './svg/Rocket-Test-External';
-
+import EmbedDemo from './svg/Embed_Demo';
+import ExternalDemo from './svg/External_Demo';
 import ApiLog from '../components/ApiLog';
-import * as WebBrowser from "expo-web-browser";
 
 export default function ApiControl(props: any) {
     const SVGatorWebView : any = React.createRef();
+    const navigation = useNavigation();
     const apiLog : any = React.createRef();
 
     const commands : any = {
@@ -29,7 +31,7 @@ export default function ApiControl(props: any) {
         seek: {command: 'seek', param: 50},
     };
 
-    const SendCommand = (command: any, event: object) => {
+    const SendCommand = (command: string, event: GestureResponderEvent) => {
         if (!commands[command]) {
             return;
         }
@@ -52,7 +54,7 @@ export default function ApiControl(props: any) {
     };
 
     const colorScheme = useColorScheme();
-    const iconSize = 32;
+    const iconSize = 20;
     const buttonWidth = '20%';
     const buttonProps = {
         width: buttonWidth,
@@ -63,8 +65,8 @@ export default function ApiControl(props: any) {
         onMessage: ReceiveMessage,
     };
     const svg = props && props.type === 'external'
-        ? <RocketTestExternal {...svgProps} />
-        : <TestRobot {...svgProps} />;
+        ? <ExternalDemo {...svgProps} />
+        : <EmbedDemo {...svgProps} />;
 
     return (
         <ScrollView>
@@ -87,6 +89,7 @@ export default function ApiControl(props: any) {
                                     name="play"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Play</Text>
                             </View>
@@ -103,6 +106,7 @@ export default function ApiControl(props: any) {
                                     name="pause"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Pause</Text>
                             </View>
@@ -119,6 +123,7 @@ export default function ApiControl(props: any) {
                                     name="stop"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Stop</Text>
                             </View>
@@ -132,10 +137,10 @@ export default function ApiControl(props: any) {
                             {...buttonProps}>
                             <View style={styles.button}>
                                 <FontAwesome5
-                                    name="play"
+                                    name="exchange-alt"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
-                                    style={{transform: [{scaleX: -1}], marginRight: 10}}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Reverse</Text>
                             </View>
@@ -147,11 +152,12 @@ export default function ApiControl(props: any) {
                                 opacity: pressed ? 0.5 : 1,
                             })}
                             {...buttonProps}>
-                            <View style={{paddingLeft: 20}}>
-                                <MaterialCommunityIcons
-                                    name="play-pause"
+                            <View style={styles.button}>
+                                <FontAwesome5
+                                    name="toggle-on"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Toggle</Text>
                             </View>
@@ -171,6 +177,7 @@ export default function ApiControl(props: any) {
                                     name="backward"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Seek -0.5s</Text>
                             </View>
@@ -184,9 +191,10 @@ export default function ApiControl(props: any) {
                             {...buttonProps}>
                             <View style={styles.button}>
                                 <FontAwesome5
-                                    name="arrows-alt-h"
+                                    name="star-half-alt"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Seek 50%</Text>
                             </View>
@@ -203,6 +211,7 @@ export default function ApiControl(props: any) {
                                     name="forward"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Seek +0.5s</Text>
                             </View>
@@ -219,6 +228,7 @@ export default function ApiControl(props: any) {
                                     name="restart"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Restart</Text>
                             </View>
@@ -236,25 +246,23 @@ export default function ApiControl(props: any) {
                                     name="eject"
                                     size={iconSize}
                                     color={Colors[colorScheme].text}
+                                    style={styles.buttonIcon}
                                 />
                                 <Text>Destruct</Text>
                             </View>
                         </Pressable>
                     </View>
                 </View>
-                <TouchableOpacity onPress={handleHelpPress} style={{marginTop: 10}}>
+                <TouchableOpacity
+                    onPress={() => {navigation.navigate('SVGator', {uri: 'https://www.svgator.com/help/getting-started/svgator-player-js-api'})}}
+                    style={{marginTop: 10}}
+                >
                     <Text lightColor={Colors.light.tint}>
                         Tap here to see SVGator's Full Player API documentation.
                     </Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
-    );
-}
-
-function handleHelpPress() {
-    WebBrowser.openBrowserAsync(
-        'https://www.svgator.com/help/getting-started/svgator-player-js-api'
     );
 }
 
@@ -299,6 +307,9 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    buttonIcon: {
+        margin: 14,
     },
 });
 

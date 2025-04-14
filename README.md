@@ -8,7 +8,7 @@ SVGator's animation player implementation for React native.
 * Copy the `.js` file into your project (anywhere in `components` directory)
 * import the file (choosing any arbitrary name):
 
-      import TestRobot from './svg/Test-Robot';
+      import ExternalDemo from './svg/External_Demo';
 
 ## Size
 
@@ -22,7 +22,7 @@ For `Player API` usage, you must pass an `onMessage` callback listener to the SV
 
 Find an example below of an SVGator animation implemented in React Native.
 
-`Test-Robot.js` should be the file exported from [SVGator](https://app.svgator.com/).
+`ExternalDemo.js` should be the file exported from [SVGator](https://app.svgator.com/).
 To capture `Player Events`, pass your callback to the `onMessage` property of the SVGator component. To control the animation, call `SVGatorWebView.current.injectJavaScript(jsCommand);`, where:
 * `SVGatorWebView` is the `ref` passed to the SVGator component
 * `jsCommand` is the JavaScript command(s) to execute inside the SVGator component
@@ -32,32 +32,34 @@ import React from "react";
 import {Text, View, Pressable} from 'react-native';
 import {FontAwesome5} from '@expo/vector-icons';
 
-import TestRobot from './components/svg/Test-Robot';
+import ExternalDemo from './components/svg/External_Demo';
 
 export default function App() {
     const SVGatorWebView : any = React.createRef();
 
     const ReceiveMessage = (event: any) => {
-        const data = JSON.parse(event.nativeEvent.data);
-        console.log(data.event + ' event occurred at offset ' + data.offset);
+      const data = JSON.parse(event.nativeEvent.data);
+      console.log(data.event + ' event occurred at offset ' + data.offset);
     };
 
     const svgProps = {
-        ref: SVGatorWebView,
-        height: 310,
-        onMessage: ReceiveMessage,
+      ref: SVGatorWebView,
+      height: 310,
+      onMessage: ReceiveMessage,
     };
 
-    const SendCommand = () => {
-        const jsCommand = `document.querySelector('svg').svgatorPlayer['seek'](50);
-        true;
-        `;
-        SVGatorWebView.current.injectJavaScript(jsCommand);
+    const SendCommand = (command : string, event : GestureResponderEvent) => {
+      const jsCommand = `const player = document.querySelector('svg').svgatorPlayer;
+      player['seek'](50);
+      player['${command}']();
+      true;
+      `;
+      SVGatorWebView.current.injectJavaScript(jsCommand);
     };
 
     return (
       <View>
-        <TestRobot {...svgProps} />
+        <ExternalDemo {...svgProps} />
           <Pressable
               onPress={(event) => SendCommand('play', event)}
               style={({pressed}) => ({
@@ -78,7 +80,10 @@ export default function App() {
 ```
 
 ## Changelog
-#### 3.0.0
+#### 3.0.2
+* Fix for `end` event triggering continuously at animation ending
+
+#### 3.0.1
 * Capturing player events with `onMessage` fixed
 
 #### 3.0.0

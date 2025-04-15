@@ -3,13 +3,13 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import {FontAwesome, AntDesign, MaterialCommunityIcons} from '@expo/vector-icons';
+import * as React from 'react';
+import {ColorSchemeName, Pressable} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer, DefaultTheme, DarkTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import * as React from 'react';
-import {ColorSchemeName, Pressable} from 'react-native';
+import {FontAwesome} from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -17,8 +17,6 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-
-import Fixes from '../screens/Fixes';
 
 import {RootStackParamList, RootTabParamList, RootTabScreenProps} from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -65,6 +63,8 @@ function BottomTabNavigator() {
             initialRouteName="TabOne"
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme].tint,
+                headerStyle: {backgroundColor: Colors.svgator},
+                tabBarStyle: {backgroundColor: Colors.svgator},
             }}>
             <BottomTab.Screen
                 name="TabOne"
@@ -72,13 +72,14 @@ function BottomTabNavigator() {
                 options={({navigation}: RootTabScreenProps<'TabOne'>) => ({
                     title: 'Embedded Player - SVGator',
                     tabBarLabel: 'Embedded Player',
-                    tabBarIcon: ({color}) => <TabBarIcon name="API" color={color}/>,
+                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                     headerRight: () => (
                         <Pressable
-                            onPress={() => navigation.navigate('SVGator')}
+                            onPress={() => navigation.navigate('SVGator', {uri: 'https://www.svgator.com/about-us'})}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
-                            })}>
+                            })}
+                        >
                             <FontAwesome
                                 name="info-circle"
                                 size={25}
@@ -95,13 +96,14 @@ function BottomTabNavigator() {
                 options={({navigation}: RootTabScreenProps<'TabTwo'>) => ({
                     title: 'External Player - SVGator',
                     tabBarLabel: 'External Player',
-                    tabBarIcon: ({color}) => <TabBarIcon name="API" color={color}/>,
+                    tabBarIcon: ({color}) => <TabBarIcon name="external-link" color={color}/>,
                     headerRight: () => (
                         <Pressable
-                            onPress={() => navigation.navigate('SVGator')}
+                            onPress={() => navigation.navigate('SVGator', {uri: 'https://www.svgator.com/about-us'})}
                             style={({pressed}) => ({
                                 opacity: pressed ? 0.5 : 1,
-                            })}>
+                            })}
+                        >
                             <FontAwesome
                                 name="info-circle"
                                 size={25}
@@ -113,16 +115,6 @@ function BottomTabNavigator() {
                 })}
             />
 
-            <BottomTab.Screen
-                name="Fixes"
-                component={Fixes}
-                options={({navigation}: RootTabScreenProps<'Fixes'>) => ({
-                    title: 'SVgator Export Tests',
-                    tabBarLabel: 'Tests',
-                    tabBarIcon: ({color}) => <MaterialCommunityIcons name="ab-testing" size={30} color={color}/>,
-                })}
-            />
-
         </BottomTab.Navigator>
     );
 }
@@ -131,8 +123,8 @@ function BottomTabNavigator() {
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-    name: React.ComponentProps<typeof AntDesign>['name'];
+    name: React.ComponentProps<typeof FontAwesome>['name'];
     color: string;
 }) {
-    return <AntDesign size={30} style={{marginBottom: -3}} {...props} />
+    return <FontAwesome size={25} {...props} />
 }

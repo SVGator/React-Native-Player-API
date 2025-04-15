@@ -1,14 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
+import { RouteProp } from "@react-navigation/native";
 
 import { View } from '../components/Themed';
+import { RootStackParamList } from "../types";
 
-export default function ModalScreen() {
+type ModalScreenRouteProp = RouteProp<RootStackParamList, 'SVGator'>;
+
+type Props = {
+  route: ModalScreenRouteProp;
+}
+
+export default function ModalScreen({route}: Props) {
+  const { uri } = route.params;
+
   return (
     <View style={styles.container}>
         <WebView
-            source={{uri: 'https://www.svgator.com/about-us'}}
+            source={{ uri }}
             containerStyle={styles.container}
             style={styles.container}
             width={400}

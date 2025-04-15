@@ -1,7 +1,7 @@
 import React from 'react';
 import ApiControl from '../components/ApiControl';
 
-export default function TabTwoScreen() {
+export default function TabOneScreen() {
     return (
         <ApiControl />
     );

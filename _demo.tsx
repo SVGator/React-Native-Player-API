@@ -1,8 +1,8 @@
 import React from "react";
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, GestureResponderEvent} from 'react-native';
 import {FontAwesome5} from '@expo/vector-icons';
 
-import TestRobot from './components/svg/Test-Robot';
+import EmbedDemo from './components/svg/Embed_Demo';
 
 export default function App() {
     const SVGatorWebView : any = React.createRef();
@@ -18,8 +18,10 @@ export default function App() {
         onMessage: ReceiveMessage,
     };
 
-    const SendCommand = () => {
-        const jsCommand = `document.querySelector('svg').svgatorPlayer['seek'](50);
+    const SendCommand = (command : string, event : GestureResponderEvent) => {
+        const jsCommand = `const player = document.querySelector('svg').svgatorPlayer;
+        player['seek'](50);
+        player['${command}']();
         true;
         `;
         SVGatorWebView.current.injectJavaScript(jsCommand);
@@ -27,7 +29,7 @@ export default function App() {
 
     return (
       <View>
-        <TestRobot {...svgProps} />
+        <EmbedDemo {...svgProps} />
           <Pressable
               onPress={(event) => SendCommand('play', event)}
               style={({pressed}) => ({
